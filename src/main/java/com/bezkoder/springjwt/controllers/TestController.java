@@ -6,12 +6,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/test")
 public class TestController {
+
+
 	@GetMapping("/all")
-	public String allAccess() {
+	public String allAccess(HttpServletResponse httpServletResponse) {
+//		httpServletResponse.addHeader("Authorization", "ged");
 		return "Public Content.";
 	}
 	
