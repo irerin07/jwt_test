@@ -73,7 +73,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	public ResponseEntity<?> registerUser(@Valid SignupRequest signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
@@ -93,33 +93,35 @@ public class AuthController {
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
+		Role roleUser = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error: 권한을 찾을 수 없습니다."));
+		roles.add(roleUser);
 
-		if (strRoles == null) {
-			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error: 권한을 찾을 수 없습니다."));
-			roles.add(userRole);
-		} else {
-			strRoles.forEach(role -> {
-				switch (role) {
-				case "admin":
-					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: 권한을 찾을 수 없습니다."));
-					roles.add(adminRole);
-
-					break;
-				case "mod":
-					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-							.orElseThrow(() -> new RuntimeException("Error: 권한을 찾을 수 없습니다."));
-					roles.add(modRole);
-
-					break;
-				default:
-					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-							.orElseThrow(() -> new RuntimeException("Error: 권한을 찾을 수 없습니다."));
-					roles.add(userRole);
-				}
-			});
-		}
+//		if (strRoles == null) {
+//			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+//					.orElseThrow(() -> new RuntimeException("Error: 권한을 찾을 수 없습니다."));
+//			roles.add(userRole);
+//		} else {
+//			strRoles.forEach(role -> {
+//				switch (role) {
+//				case "admin":
+//					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+//							.orElseThrow(() -> new RuntimeException("Error: 권한을 찾을 수 없습니다."));
+//					roles.add(adminRole);
+//
+//					break;
+//				case "mod":
+//					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+//							.orElseThrow(() -> new RuntimeException("Error: 권한을 찾을 수 없습니다."));
+//					roles.add(modRole);
+//
+//					break;
+//				default:
+//					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+//							.orElseThrow(() -> new RuntimeException("Error: 권한을 찾을 수 없습니다."));
+//					roles.add(userRole);
+//				}
+//			});
+//		}
 
 		user.setRoles(roles);
 		userRepository.save(user);

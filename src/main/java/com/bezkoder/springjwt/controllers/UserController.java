@@ -16,4 +16,9 @@ public class UserController {
             defaultValue = "false") String errorFlag) {
         return "users/login";
     }
+
+    @GetMapping("/signup")
+    public String signup() {
+        return "users/signup";
+    }
 }
